@@ -9,7 +9,8 @@ resource "aws_acm_certificate" "this" {
 }
 
 module "dns_record" {
-  source = "github.com/ptonini/terraform-aws-route53-record?ref=v1"
+  source = "ptonini/route53-record/aws"
+  version = "~> 1.0.0"
   for_each = { for dvo in aws_acm_certificate.this.domain_validation_options : dvo.domain_name =>
   {
     name   = dvo.resource_record_name

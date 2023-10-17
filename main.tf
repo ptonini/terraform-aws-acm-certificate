@@ -1,5 +1,12 @@
+locals {
+  domain_validation_options = { for o in aws_acm_certificate.this.domain_validation_options : o.domain_name => {
+    name   = o.resource_record_name
+    record = o.resource_record_value
+    type   = o.resource_record_type
+  } }
+}
+
 resource "aws_acm_certificate" "this" {
-  provider                  = aws.current
   domain_name               = var.domain_name
   subject_alternative_names = var.subject_alternative_names
   validation_method         = "DNS"
@@ -13,22 +20,11 @@ resource "aws_acm_certificate" "this" {
 }
 
 module "dns_record" {
-  source  = "ptonini/route53-record/aws"
-  version = "~> 1.0.0"
-  for_each = { for dvo in aws_acm_certificate.this.domain_validation_options : dvo.domain_name =>
-    {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
-    }
-  }
+  source       = "ptonini/route53-record/aws"
+  version      = "~> 1.0.0"
+  for_each     = var.route53_zone == null ? {} : local.domain_validation_options
   route53_zone = var.route53_zone
   name         = each.value["name"]
   type         = each.value["type"]
-  records = [
-    each.value["record"]
-  ]
-  providers = {
-    aws = aws.dns
-  }
+  records      = [each.value["record"]]
 }

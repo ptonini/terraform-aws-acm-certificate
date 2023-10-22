@@ -13,8 +13,12 @@ resource "aws_acm_certificate" "this" {
   lifecycle {
     create_before_destroy = true
     ignore_changes = [
-      tags,
-      tags_all
+      tags.business_unit,
+      tags.product,
+      tags.env,
+      tags_all.business_unit,
+      tags_all.product,
+      tags_all.env
     ]
   }
 }

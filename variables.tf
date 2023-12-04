@@ -8,3 +8,8 @@ variable "subject_alternative_names" {
 variable "route53_zone" {
   default = null
 }
+
+variable "tags" {
+  type    = map(string)
+  default = {}
+}

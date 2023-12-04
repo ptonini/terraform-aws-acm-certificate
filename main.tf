@@ -10,15 +10,16 @@ resource "aws_acm_certificate" "this" {
   domain_name               = var.domain_name
   subject_alternative_names = var.subject_alternative_names
   validation_method         = "DNS"
+  tags                      = var.tags
+
   lifecycle {
     create_before_destroy = true
     ignore_changes = [
-      tags.business_unit,
-      tags.product,
-      tags.env,
-      tags_all.business_unit,
-      tags_all.product,
-      tags_all.env
+      tags["business_unit"],
+      tags["product"],
+      tags["env"],
+      tags_all,
+
     ]
   }
 }

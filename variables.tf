@@ -5,7 +5,7 @@ variable "subject_alternative_names" {
   default = []
 }
 
-variable "route53_zone" {
+variable "zone_id" {
   default = null
 }
 

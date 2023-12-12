@@ -26,9 +26,9 @@ resource "aws_acm_certificate" "this" {
 
 module "dns_record" {
   source       = "ptonini/route53-record/aws"
-  version      = "~> 1.0.0"
-  for_each     = var.route53_zone == null ? {} : local.domain_validation_options
-  route53_zone = var.route53_zone
+  version      = "~> 1.1.1"
+  for_each     = var.zone_id == null ? {} : local.domain_validation_options
+  zone_id = var.zone_id
   name         = each.value["name"]
   type         = each.value["type"]
   records      = [each.value["record"]]
